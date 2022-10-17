@@ -21,6 +21,7 @@ class Income {
 
         return income;
     }
+
 }
 
 export { Income }

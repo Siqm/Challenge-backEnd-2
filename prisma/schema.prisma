@@ -14,12 +14,12 @@ model Income {
   id          String      @id @default(uuid())
   description String      
   value       Decimal
-  date        String    
+  date        DateTime    @default(now())
 }
 
 model OutGoing {
   id          String      @id @default(uuid())
   description String
   value       Decimal
-  date        String    
+  date        DateTime    @default(now())
 }
