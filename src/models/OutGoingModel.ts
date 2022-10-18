@@ -1,21 +1,21 @@
 import { Decimal } from "@prisma/client/runtime";
 import { client } from "../prisma/client";
 
-interface IncomeRequest { 
+interface OutGoingRequest {
     description: string;
     value: Decimal;
     date: Date
 }
 
-class Income {
-    
-    static async createIncome ({ description, value, date }: IncomeRequest) {
+class OutGoing {
+
+    static async createOutGoing ({ description, value, date}: OutGoingRequest) {
 
         if (!description || !value) {
             throw Error('All fields must be filled')
         }
 
-        const income = await client.income.create({
+        const outgoing = await client.outGoing.create({
             data: {
                 description,
                 value,
@@ -23,9 +23,8 @@ class Income {
             }
         })
 
-        return income;
+        return outgoing
     }
-
 }
 
-export { Income }
+export { OutGoing }
