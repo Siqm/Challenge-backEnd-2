@@ -12,10 +12,20 @@ class TesteController {
             }
         })
 
-        const date = Date.parse(Date.now())
-        console.log(date)
 
         return res.json(data)
+    }
+
+    static async testeData(req: Request, res: Response) {
+        const { month, year } = req.body;
+
+        const date = new Date
+
+        date.setFullYear(year, month)
+
+        console.log(date.toString())
+
+        return res.json().status(200);
     }
 }
 

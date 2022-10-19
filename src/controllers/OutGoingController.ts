@@ -6,7 +6,9 @@ class OutGoingController {
 
     static async postOutGoing (req: Request, res: Response) {
 
-        const { description, value, date } = req.body;
+        const { description, value, month, year, day } = req.body;
+
+        
 
         const outGoing = await OutGoing.createOutGoing({description, value, date})
 

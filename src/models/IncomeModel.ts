@@ -1,4 +1,5 @@
 import { Decimal } from "@prisma/client/runtime";
+import { DateUseCase } from "../handlers/DateUseCase";
 import { client } from "../prisma/client";
 
 interface IncomeRequest { 
@@ -11,6 +12,8 @@ class Income {
     
     static async createIncome ({ description, value, date }: IncomeRequest) {
 
+
+
         if (!description || !value) {
             throw Error('All fields must be filled')
         }
@@ -20,6 +23,28 @@ class Income {
                 description,
                 value,
                 date
+            }
+        })
+
+        return income;
+    }
+
+    static async findByMonthAndDescription (year, month, description) {
+
+        const { minimumDate, maximumDate } = DateUseCase.monthReference(month, year)
+
+        const income = await client.income.findFirst({
+            where: {
+                AND: [
+                    {
+                        date: {
+                            gte: minimumDate,
+                            lt: maximumDate
+                        }
+                    }, {
+                        description: description
+                    }
+                ]
             }
         })
 

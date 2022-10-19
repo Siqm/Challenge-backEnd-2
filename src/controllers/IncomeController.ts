@@ -1,6 +1,7 @@
 import { Income } from "../models/IncomeModel";
 import { Request, Response } from "express"
 import { client } from "../prisma/client";
+import { DateUseCase } from "../handlers/DateUseCase";
 
 class IncomeController {
 
@@ -16,7 +17,14 @@ class IncomeController {
     }
 
     static async postIncome (req: Request, res: Response) {
-        const { description, value, date } = req.body;
+        var { description, value, day, month, year } = req.body;
+        const alreadyExists = Income.findByMonthAndDescription(year, month, description)
+
+        if (alreadyExists) {
+            return res.json("ERROR: There is already a entry with same description and month").status
+        }
+
+        const date = new Date(year, month, day)
 
         const income = await Income.createIncome({
             description,
