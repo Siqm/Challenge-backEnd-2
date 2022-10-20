@@ -1,20 +1,12 @@
 import { Decimal } from "@prisma/client/runtime";
-import { DateUseCase } from "../handlers/DateUseCase";
+import { DateUseCase } from "../providers/DateUseCase";
 import { client } from "../prisma/client";
 
-interface OutGoingRequest {
-    description: string;
-    value: Decimal;
-    date: Date
-}
+
 
 class OutGoing {
 
-    static async createOutGoing ({ description, value, date}: OutGoingRequest) {
-
-        if (!description || !value) {
-            throw Error('All fields must be filled')
-        }
+    static async createOutGoing (description, value, date) {
 
         const outgoing = await client.outGoing.create({
             data: {
@@ -24,7 +16,7 @@ class OutGoing {
             }
         })
 
-        return outgoing
+        return outgoing;
     }
 
     static async findByMonthAndDescription (year, month, description) {
