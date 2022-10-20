@@ -1,7 +1,7 @@
 import { Income } from "../models/IncomeModel";
 import { Request, Response } from "express"
 import { client } from "../prisma/client";
-import { DateUseCase } from "../handlers/DateUseCase";
+import { DateUseCase } from "../providers/DateUseCase";
 
 class IncomeController {
 
@@ -13,19 +13,26 @@ class IncomeController {
             }
         })
 
+        if (!income) {
+            return res.json("ERROR: Income not find").status(502)
+        }
+
         return res.json(income)
     }
 
     static async postIncome (req: Request, res: Response) {
         var { description, value, day, month, year } = req.body;
-        const alreadyExists = Income.findByMonthAndDescription(year, month, description)
 
+        if(!description || !value || !month || !year || !day) {
+            return res.json("ERROR: All fields must be filled");
+        }
+
+        const alreadyExists = await Income.findByMonthAndDescription(year, month, description)
         if (alreadyExists) {
             return res.json("ERROR: There is already a entry with same description and month").status
         }
 
         const date = new Date(year, month, day)
-
         const income = await Income.createIncome({
             description,
             value,
@@ -43,21 +50,15 @@ class IncomeController {
 
     static async atualizeIncome (req: Request, res: Response) {
         const { income_id } = req.params;
-        const { description, value } = req.body;
+        const { description, value, month, year, day } = req.body;
 
-        if (!description || !value) {
-            throw Error("All fields must be provided!")
+        if (!description || !value || !month || !year || !day) {
+            return res.json("ERROR: All fields must be provided").status(502)
         }
 
-        const income = await client.income.update({
-            where: {
-                id: income_id
-            },
-            data: {
-                description: description,
-                value: value
-            }
-        })
+        const date = new Date(year, month, day)
+
+        const income = await Income.update({description, value, date}, income_id)
 
         return res.json(income)
     }
