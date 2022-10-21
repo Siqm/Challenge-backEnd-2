@@ -16,6 +16,7 @@ router.get('/incomes', (req, res) => {
 router.get('/incomes/:income_id', IncomeController.detailIncome)
 router.put('/incomes/:income_id', IncomeController.atualizeIncome)
 router.delete('/incomes/:income_id', IncomeController.deleteIncome)
+router.get('/incomes/:year/:month', IncomeController.findByMonth)
 
 router.post('/outgoings', OutgoingController.postOutgoing)
 router.get('/outgoings', (req, res) => {

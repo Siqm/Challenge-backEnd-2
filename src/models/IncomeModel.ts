@@ -22,6 +22,20 @@ class Income {
         return income;
     }
 
+    static async findByMonth (minimumDate, maximumDate) {
+
+        const incomes = client.income.findMany({
+            where: {
+                date: {
+                    gte: minimumDate,
+                    lt: maximumDate
+                }
+            }
+        })
+
+        return incomes;
+    }
+
     static async findByMonthAndDescription (year, month, description) {
         const { minimumDate, maximumDate } = DateUseCase.monthReference(month, year)
 

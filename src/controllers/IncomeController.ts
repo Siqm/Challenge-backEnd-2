@@ -6,6 +6,21 @@ import { prisma, Prisma } from "@prisma/client";
 
 class IncomeController {
 
+    static async findByMonth(req: Request, res: Response) {
+
+        const { year, month } = req.params
+        const {minimumDate, maximumDate} = DateUseCase.monthReference(year, month)
+
+        const incomes = await Income.findByMonth(minimumDate, maximumDate)
+
+        const json = incomes.forEach((element) => {
+            console.log(element.date + "\n" + element.description + "\n" + element.value) 
+        })  
+
+
+        return res.json(incomes)
+    }
+
     static async detailIncome(req: Request, res: Response) {
         const { income_id } = req.params;
         const income = await client.income.findFirst({
