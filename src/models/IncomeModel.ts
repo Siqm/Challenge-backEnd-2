@@ -4,16 +4,21 @@ import { client } from "../prisma/client";
 interface IncomeRequest { 
     description: string;
     value: Decimal;
-    date: Date
 }
 
 class Income {
     
-    static async createIncome ({ description, value, date }: IncomeRequest) {
+    static async createIncome ({ description, value }: IncomeRequest) {
 
         if (!description || !value) {
             throw Error('All fields must be filled')
         }
+
+        const date = new Date();
+
+        const alreadyExists = await client.income.findMany({
+            
+        })
 
         const income = await client.income.create({
             data: {

@@ -12,7 +12,8 @@ class TesteController {
             }
         })
 
-        const date = Date.parse(Date.now())
+        const date = new Date()
+        
         console.log(date)
 
         return res.json(data)
