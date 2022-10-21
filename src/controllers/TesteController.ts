@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Category } from "../enum/CategoryEnum";
 import { client } from "../prisma/client";
 
 class TesteController {
@@ -26,6 +27,15 @@ class TesteController {
         console.log(date.toString())
 
         return res.json().status(200);
+    }
+
+    static async testeEnum(req: Request, res: Response) {
+
+        const { category } = req.body;
+
+        const eNum = Category[category]
+
+        return res.json(eNum)
     }
 }
 
