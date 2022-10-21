@@ -18,5 +18,6 @@ router.put('/outgoings/:outgoing_id', OutGoingController.atualizeOutgoing)
 router.delete('/outgoings/:outgoing_id', OutGoingController.deleteOutgoing)
 
 router.get('/teste', TesteController.getByDate)
+router.get('/teste1', TesteController.testeData)
 
 export { router };

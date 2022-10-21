@@ -6,9 +6,19 @@ class OutGoingController {
 
     static async postOutGoing (req: Request, res: Response) {
 
-        const { description, value, date } = req.body;
+        const { description, value, month, year, day } = req.body;
 
-        const outGoing = await OutGoing.createOutGoing({description, value, date})
+        if(!description || !value || !month || !year || !day) {
+            return res.json("ERROR: All fields must be filled").status(502);
+        }
+
+        const alreadyExists = await OutGoing.findByMonthAndDescription(year, month, description)
+        if (alreadyExists) {
+            return res.json("ERROR: There is already a entry with same description and month").status(400)
+        }
+        
+        const date = new Date(year, month, day);
+        const outGoing = await OutGoing.createOutGoing(description, value, date)
 
         return res.json(outGoing);
     }
@@ -63,6 +73,10 @@ class OutGoingController {
                 id: outgoing_id
             }
         })
+
+        if (!outgoing) {
+            return res.json("ERROR: Outgoing not find").status(502)
+        }
 
         return res.json(outgoing)
     }
