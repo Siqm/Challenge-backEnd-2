@@ -1,4 +1,6 @@
+import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
+import { Category } from "../enum/CategoryEnum";
 import { Outgoing } from "../models/OutgoingModel";
 import { client } from "../prisma/client";
 
@@ -7,6 +9,9 @@ class OutgoingController {
     static async postOutgoing (req: Request, res: Response) {
 
         const { description, value, month, year, day, category } = req.body;
+
+        // Casting string to enum
+        const enumCategory = Category[category]
 
         if(!description || !value || !month || !year || !day) {
             return res.json("ERROR: All fields must be filled").status(502);
@@ -18,7 +23,7 @@ class OutgoingController {
         }
         
         const date = new Date(year, month, day);
-        const outgoing = await Outgoing.createOutgoing(description, value, date, category)
+        const outgoing = await Outgoing.createOutgoing(description, value, date, enumCategory)
 
         return res.json(outgoing);
     }
@@ -77,6 +82,22 @@ class OutgoingController {
         if (!outgoing) {
             return res.json("ERROR: Outgoing not find").status(502)
         }
+
+        return res.json(outgoing)
+    }
+
+    static async findByDescription(req: Request, res: Response) {
+        const description = req.query.description as string
+
+        const validatedDescription = (description: string) => {
+            return Prisma.validator<Prisma.OutgoingWhereInput>()({
+                description
+            })
+        }
+
+        const outgoing = await client.outgoing.findMany({
+            where: validatedDescription(description)
+        })
 
         return res.json(outgoing)
     }

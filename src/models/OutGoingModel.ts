@@ -1,23 +1,20 @@
-import { Decimal } from "@prisma/client/runtime";
 import { DateUseCase } from "../providers/DateUseCase";
 import { client } from "../prisma/client";
-
+// import { Category } from "../enum/CategoryEnum";
+import { Category } from "@prisma/client"
 
 
 class Outgoing {
 
-    static async createOutgoing (description, value, date, category) {
+    static async createOutgoing (description, value, date, cat) {
 
-        if (!category) {
-            console.log("category null")
-            category = Category.Other
-        }
+
         const outgoing = await client.outgoing.create({
             data: {
                 description,
                 value,
                 date,
-                category
+                category: cat
             }
         })
 

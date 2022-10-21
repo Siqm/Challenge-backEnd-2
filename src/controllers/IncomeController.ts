@@ -2,6 +2,7 @@ import { Income } from "../models/IncomeModel";
 import { Request, Response } from "express"
 import { client } from "../prisma/client";
 import { DateUseCase } from "../providers/DateUseCase";
+import { prisma, Prisma } from "@prisma/client";
 
 class IncomeController {
 
@@ -84,8 +85,21 @@ class IncomeController {
         }
         
     }
-    static findByDescription(req: Request, res: Response) {
-        throw new Error("Method not implemented.");
+    
+    static async findByDescription(req: Request, res: Response) {
+        const description = req.query.description as string
+
+        const validatedDescription = (description: string) => {
+            return Prisma.validator<Prisma.IncomeWhereInput>()({
+                description
+            })
+        }
+
+        const income = await client.income.findMany({
+            where: validatedDescription(description)
+        })
+
+        return res.json(income)
     }
 }
 
