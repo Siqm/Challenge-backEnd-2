@@ -4,15 +4,20 @@ import { client } from "../prisma/client";
 
 
 
-class OutGoing {
+class Outgoing {
 
-    static async createOutGoing (description, value, date) {
+    static async createOutgoing (description, value, date, category) {
 
-        const outgoing = await client.outGoing.create({
+        if (!category) {
+            console.log("category null")
+            category = Category.Other
+        }
+        const outgoing = await client.outgoing.create({
             data: {
                 description,
                 value,
-                date
+                date,
+                category
             }
         })
 
@@ -23,7 +28,7 @@ class OutGoing {
 
         const { minimumDate, maximumDate } = DateUseCase.monthReference(month, year)
 
-        const outGoing = await client.outGoing.findFirst({
+        const outgoing = await client.outgoing.findFirst({
             where: {
                 AND: [
                     {
@@ -38,8 +43,8 @@ class OutGoing {
             }
         })
 
-        return outGoing;
+        return outgoing;
     }
 }
 
-export { OutGoing }
+export { Outgoing }

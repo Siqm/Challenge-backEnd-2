@@ -17,9 +17,21 @@ model Income {
   date        DateTime
 } 
 
-model OutGoing {
+model Outgoing {
   id          String      @id @default(uuid())
   description String
   value       Decimal
   date        DateTime    
+  category    Category    @default(Other)
+}
+
+enum Category {
+    Food
+    Health
+    Habitation
+    Transport
+    Education
+    Leisure
+    Unexpected
+    Other
 }

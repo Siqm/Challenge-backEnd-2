@@ -74,6 +74,19 @@ class IncomeController {
 
         return res.json(income)
     }
+
+    static async indexOrDescription (req: Request, res: Response) {
+
+        if (!req.query) {
+            IncomeController.postIncome(req, res)
+        } else {
+            IncomeController.findByDescription(req, res)
+        }
+        
+    }
+    static findByDescription(req: Request, res: Response) {
+        throw new Error("Method not implemented.");
+    }
 }
 
 export { IncomeController }
