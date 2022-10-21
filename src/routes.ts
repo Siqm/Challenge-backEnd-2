@@ -19,5 +19,6 @@ router.delete('/outgoings/:outgoing_id', OutGoingController.deleteOutgoing)
 
 router.get('/teste', TesteController.getByDate)
 router.get('/teste1', TesteController.testeData)
+router.post('/testeenum', TesteController.testeEnum)
 
 export { router };
