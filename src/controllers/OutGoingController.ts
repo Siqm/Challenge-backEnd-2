@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
-import { Category } from "../enum/CategoryEnum";
+import { ArgumentError } from "../errors/ArgumentError";
+import { Category } from "../models/CategoryModel"
 import { Outgoing } from "../models/OutgoingModel";
 import { client } from "../prisma/client";
 
@@ -13,8 +14,8 @@ class OutgoingController {
         // Casting string to enum
         const enumCategory = Category[category]
 
-        if(!description || !value || !month || !year || !day) {
-            return res.json("ERROR: All fields must be filled").status(502);
+        if (ArgumentError.missingArgument(req.body)) {
+            return res.json("ERROR: All fields must be filled").status(502)
         }
 
         const alreadyExists = await Outgoing.findByMonthAndDescription(year, month, description)
@@ -37,11 +38,7 @@ class OutgoingController {
 
     static async getOutgoingById (req: Request, res: Response) {
         const { outgoing_id } = req.params
-        const outgoing = await client.outgoing.findFirst({
-            where: {
-                id: outgoing_id
-            }
-        })
+        const outgoing = await Outgoing.findById(outgoing_id)
 
         if (!outgoing) {
             return res.json('Error: Id Didn\'t match any result')
@@ -54,18 +51,11 @@ class OutgoingController {
         const { outgoing_id } = req.params;
         const { description, value } = req.body;
 
-        if (!description || !value) {
-            throw Error("All fields must be provided!")
+        if(ArgumentError.missingDescriptionAndValue(description, value)) {
+            return res.json("ERROR: Fields description and value must be filled").status(502)
         }
 
-        const outgoing = await client.outgoing.update({
-            where: {
-                id: outgoing_id
-            }, data: {
-                description: description,
-                value: value
-            }
-        })
+        const outgoing = await Outgoing.updateById(outgoing_id, description, value)
     
         return res.json(outgoing)
     }
@@ -89,17 +79,23 @@ class OutgoingController {
     static async findByDescription(req: Request, res: Response) {
         const description = req.query.description as string
 
-        const validatedDescription = (description: string) => {
-            return Prisma.validator<Prisma.OutgoingWhereInput>()({
-                description
-            })
+        const outgoing = await Outgoing.findByDescription(description)
+
+        if(!outgoing) {
+            return res.json("ERROR: No matches with the given description")
         }
 
-        const outgoing = await client.outgoing.findMany({
-            where: validatedDescription(description)
-        })
-
         return res.json(outgoing)
+    }
+
+    static async indexOrDescription (req: Request, res: Response) {
+
+        if (!req.query.description) {
+            OutgoingController.index(req, res)
+        } else {
+            OutgoingController.findByDescription(req, res)
+        }
+        
     }
 }
 

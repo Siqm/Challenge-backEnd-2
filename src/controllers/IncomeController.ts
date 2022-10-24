@@ -2,7 +2,7 @@ import { Income } from "../models/IncomeModel";
 import { Request, Response } from "express"
 import { client } from "../prisma/client";
 import { DateUseCase } from "../providers/DateUseCase";
-import { prisma, Prisma } from "@prisma/client";
+import { ArgumentError } from "../errors/ArgumentError";
 
 class IncomeController {
 
@@ -13,21 +13,12 @@ class IncomeController {
 
         const incomes = await Income.findByMonth(minimumDate, maximumDate)
 
-        const json = incomes.forEach((element) => {
-            console.log(element.date + "\n" + element.description + "\n" + element.value) 
-        })  
-
-
         return res.json(incomes)
     }
 
     static async detailIncome(req: Request, res: Response) {
         const { income_id } = req.params;
-        const income = await client.income.findFirst({
-            where: {
-                id: income_id
-            }
-        })
+        const income = await Income.findById(income_id)
 
         if (!income) {
             return res.json("ERROR: Income not find").status(502)
@@ -37,10 +28,11 @@ class IncomeController {
     }
 
     static async postIncome (req: Request, res: Response) {
-        var { description, value, day, month, year } = req.body;
 
-        if(!description || !value || !month || !year || !day) {
-            return res.json("ERROR: All fields must be filled");
+        const { description, value, day, month, year } = req.body
+
+        if (ArgumentError.missingArgument(req.body)) {
+            return res.json("ERROR: All fields must be filled").status(502)
         }
 
         const alreadyExists = await Income.findByMonthAndDescription(year, month, description)
@@ -68,13 +60,13 @@ class IncomeController {
         const { income_id } = req.params;
         const { description, value, month, year, day } = req.body;
 
-        if (!description || !value || !month || !year || !day) {
-            return res.json("ERROR: All fields must be provided").status(502)
+        if (ArgumentError.missingArgument(req.body)) {
+            return res.json("ERROR: All fields must be filled").status(502)
         }
 
         const date = new Date(year, month, day)
-
-        const income = await Income.update({description, value, date}, income_id)
+        
+        const income = await Income.update(description, value, date, income_id)
 
         return res.json(income)
     }
@@ -82,19 +74,15 @@ class IncomeController {
     static async deleteIncome(req: Request, res: Response) {
         const { income_id } = req.params;
 
-        const income = await client.income.delete({
-            where: {
-                id: income_id
-            }
-        })
+        const income = await Income.deleteById(income_id)
 
         return res.json(income)
     }
 
     static async indexOrDescription (req: Request, res: Response) {
 
-        if (!req.query) {
-            IncomeController.postIncome(req, res)
+        if (!req.query.description) {
+            IncomeController.index(req, res)
         } else {
             IncomeController.findByDescription(req, res)
         }
@@ -102,19 +90,20 @@ class IncomeController {
     }
     
     static async findByDescription(req: Request, res: Response) {
-        const description = req.query.description as string
+        const description = req.query.description 
 
-        const validatedDescription = (description: string) => {
-            return Prisma.validator<Prisma.IncomeWhereInput>()({
-                description
-            })
-        }
-
-        const income = await client.income.findMany({
-            where: validatedDescription(description)
-        })
+        const income = await Income.findAndValidateDescription(description)
 
         return res.json(income)
+    }
+    
+    static async deleteByDescription(req: Request, res: Response) {
+        const incomes = await Income.clearAllDescription(req.query.description)
+
+        console.log(incomes)
+
+
+        return res.json(incomes)
     }
 }
 

@@ -6,26 +6,15 @@ import { TesteController } from "./controllers/TesteController";
 const router = Router()
 
 router.post('/incomes', IncomeController.postIncome)
-router.get('/incomes', (req, res) => {
-    if (req.query.description) {
-        return IncomeController.findByDescription(req, res)
-    } else {
-        return IncomeController.index(req, res)
-    }
-})
+router.get('/incomes', IncomeController.indexOrDescription)
 router.get('/incomes/:income_id', IncomeController.detailIncome)
 router.put('/incomes/:income_id', IncomeController.atualizeIncome)
 router.delete('/incomes/:income_id', IncomeController.deleteIncome)
 router.get('/incomes/:year/:month', IncomeController.findByMonth)
+// router.get('/incomesdel', IncomeController.deleteByDescription)
 
 router.post('/outgoings', OutgoingController.postOutgoing)
-router.get('/outgoings', (req, res) => {
-    if (req.query.description) {
-        return OutgoingController.findByDescription(req, res)
-    } else {
-        return OutgoingController.index(req, res)
-    }
-})
+router.get('/outgoings', OutgoingController.indexOrDescription)
 router.get('/outgoings/:outgoing_id', OutgoingController.getOutgoingById)
 router.put('/outgoings/:outgoing_id', OutgoingController.atualizeOutgoing)
 router.delete('/outgoings/:outgoing_id', OutgoingController.deleteOutgoing)

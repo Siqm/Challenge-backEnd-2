@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Category } from "../enum/CategoryEnum";
+import { Category } from "../models/CategoryModel";
 import { client } from "../prisma/client";
 
 class TesteController {

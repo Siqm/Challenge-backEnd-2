@@ -8,3 +8,5 @@
     Unexpected = "UNEXPECTED",
     Other = "OTHER"
 }
+
+export { Category }
