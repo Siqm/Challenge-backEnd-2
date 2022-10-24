@@ -79,6 +79,20 @@ class Outgoing {
 
         return outgoing
     }
+
+    static async findByMonthExtent(minimumDate, maximumDate) {
+
+        const outgoings = await client.outgoing.findMany({
+            where: {
+                date: {
+                    gte: minimumDate,
+                    lt: maximumDate
+                }
+            }
+        })
+
+        return outgoings
+    }
 }
 
 export { Outgoing }

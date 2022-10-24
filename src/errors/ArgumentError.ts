@@ -15,6 +15,14 @@ class ArgumentError {
         }
         return false;
     }
+    
+    static missingMonthYear (year, month) {
+
+        if (!year || !month) {
+            return true
+        }
+        return false
+    }
 }
 
 export { ArgumentError }

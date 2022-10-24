@@ -18,6 +18,7 @@ router.get('/outgoings', OutgoingController.indexOrDescription)
 router.get('/outgoings/:outgoing_id', OutgoingController.getOutgoingById)
 router.put('/outgoings/:outgoing_id', OutgoingController.atualizeOutgoing)
 router.delete('/outgoings/:outgoing_id', OutgoingController.deleteOutgoing)
+router.get('/outgoings/:year/:month', OutgoingController.findByMonth)
 
 router.get('/teste', TesteController.getByDate)
 router.get('/teste1', TesteController.testeData)

@@ -4,6 +4,7 @@ import { ArgumentError } from "../errors/ArgumentError";
 import { Category } from "../models/CategoryModel"
 import { Outgoing } from "../models/OutgoingModel";
 import { client } from "../prisma/client";
+import { DateUseCase } from "../providers/DateUseCase";
 
 class OutgoingController {
 
@@ -96,6 +97,20 @@ class OutgoingController {
             OutgoingController.findByDescription(req, res)
         }
         
+    }
+
+    static async findByMonth(req: Request, res: Response) {
+
+        const { year, month } = req.params
+        if (ArgumentError.missingMonthYear(year, month)) {
+            return res.status(502).json("ERROR: Missing year or month")
+        }
+
+        const date = new Date(parseInt(year), parseInt(month))
+        const { maximumDate, minimumDate } = DateUseCase.monthReference(year, month)
+
+        const outgoings = await Outgoing.findByMonthExtent(minimumDate, maximumDate)
+        return res.json(outgoings)
     }
 }
 

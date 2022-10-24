@@ -11,7 +11,7 @@ class IncomeController {
         const { year, month } = req.params
         const {minimumDate, maximumDate} = DateUseCase.monthReference(year, month)
 
-        const incomes = await Income.findByMonth(minimumDate, maximumDate)
+        const incomes = await Income.findByMonthExtent(minimumDate, maximumDate)
 
         return res.json(incomes)
     }

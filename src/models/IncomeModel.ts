@@ -36,9 +36,9 @@ class Income {
         return income;
     }
 
-    static async findByMonth (minimumDate, maximumDate) {
+    static async findByMonthExtent (minimumDate, maximumDate) {
 
-        const incomes = client.income.findMany({
+        const incomes = await client.income.findMany({
             where: {
                 date: {
                     gte: minimumDate,
