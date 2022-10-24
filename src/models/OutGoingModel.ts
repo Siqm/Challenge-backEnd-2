@@ -93,6 +93,39 @@ class Outgoing {
 
         return outgoings
     }
+
+    static async getTotalByMonth (minimumDate, maximumDate) {
+        const sum = await client.outgoing.aggregate({
+            _sum: {
+                value: true,
+            },
+            where: {
+                date: {
+                    gte: minimumDate,
+                    lt: maximumDate
+                }
+            }
+        })
+
+        return sum
+    }
+
+    static async groupByMonthFilterByMonth (minimumDate, maximumDate) {
+        const outgoings = await client.outgoing.groupBy({
+            by: ['category'],
+            where: {
+                date: {
+                    gte: minimumDate,
+                    lt: maximumDate
+                }
+            },
+            _sum:{
+                value: true
+            }
+        })
+
+        return outgoings
+    }
 }
 
 export { Outgoing }

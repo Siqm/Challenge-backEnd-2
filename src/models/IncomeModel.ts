@@ -127,6 +127,22 @@ class Income {
 
         return incomes
     }
+
+    static async getTotalByMonth(minimumDate, maximumDate) {
+        const sum = await client.income.aggregate({
+            _sum: {
+                value: true,
+            },
+            where: {
+                date: {
+                    gte: minimumDate,
+                    lt: maximumDate
+                }
+            }
+        })
+
+        return sum;
+    }
 }
 
 export { Income }

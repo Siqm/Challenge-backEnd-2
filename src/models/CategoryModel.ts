@@ -1,6 +1,6 @@
  enum Category {
-    Food = "FOOD",
-    Health = "HEALTH",
+    Food = "Food",
+    Health = "Health",
     Habitation = "HABITATION",
     Transport = "TRANSPORT",
     Education = "EDUCATION",

@@ -106,7 +106,6 @@ class OutgoingController {
             return res.status(502).json("ERROR: Missing year or month")
         }
 
-        const date = new Date(parseInt(year), parseInt(month))
         const { maximumDate, minimumDate } = DateUseCase.monthReference(year, month)
 
         const outgoings = await Outgoing.findByMonthExtent(minimumDate, maximumDate)
