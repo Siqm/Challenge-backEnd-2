@@ -11,18 +11,25 @@ class ResumeController {
         const { year, month } = req.params;
         const { minimumDate, maximumDate } = DateUseCase.monthReference(year, month)
 
-        const incomesSum = await Income.getTotalByMonth(minimumDate, maximumDate)
-        const outgoingsSum = await Outgoing.getTotalByMonth(minimumDate, maximumDate)
+        const incomesSum = (await Income.getTotalByMonth
+            (minimumDate, maximumDate))._sum.value.toFixed(2)
+        const outgoingsSum = (await Outgoing.getTotalByMonth
+            (minimumDate, maximumDate))._sum.value.toFixed(2)
 
-        const incomesBalance = outgoingsSum._sum.value.toFixed(2)
-        const outgoingBalance = incomesSum._sum.value.toFixed(2)
+        if (!outgoingsSum && !incomesSum) {
+            return res.json("ERROR: No matches to the given year and month")
+        }
 
-        const balance = parseFloat(incomesBalance) - parseFloat(outgoingBalance)
+        const incomesBalance = parseFloat(incomesSum)
+        const outgoingBalance = parseFloat(outgoingsSum)
 
-        const categorys = await Outgoing.groupByMonthFilterByMonth(minimumDate, maximumDate)
+        const balance = incomesBalance - outgoingBalance
 
-        console.log(balance, categorys)
-        return true;
+        const categorys = await Outgoing.groupByCategoryFilterByDate(minimumDate, maximumDate)
+
+        const response = { categorys, balance, incomesBalance, outgoingBalance}
+
+        return res.json(response);
     }
 }
 

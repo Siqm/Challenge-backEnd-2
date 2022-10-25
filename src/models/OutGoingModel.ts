@@ -110,7 +110,7 @@ class Outgoing {
         return sum
     }
 
-    static async groupByMonthFilterByMonth (minimumDate, maximumDate) {
+    static async groupByCategoryFilterByDate (minimumDate, maximumDate) {
         const outgoings = await client.outgoing.groupBy({
             by: ['category'],
             where: {
