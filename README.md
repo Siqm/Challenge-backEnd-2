@@ -1,4 +1,4 @@
-#Instalando o projeto
+# Instalando o projeto
 
 Para começar, é necessário fazer as instalações novamente e são elas:
 ```
