@@ -26,5 +26,8 @@ router.get('/resume/:year/:month', ResumeController.monthResume)
 router.get('/teste', TesteController.getByDate)
 router.get('/teste1', TesteController.testeData)
 router.post('/testeenum', TesteController.testeEnum)
+router.get('/', (req, res) => {
+    throw new Error ("Erro lançado no get")
+})
 
 export { router };
