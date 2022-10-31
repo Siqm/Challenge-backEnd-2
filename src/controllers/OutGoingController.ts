@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
-import { BadRequestError, DuplicatedFieldError } from "../helpers/api-errors";
+import { ArgumentError } from "../errors/ArgumentError";
 import { Category } from "../models/CategoryModel"
 import { Outgoing } from "../models/OutgoingModel";
 import { client } from "../prisma/client";
@@ -15,19 +15,16 @@ class OutgoingController {
         // Casting string to enum
         const enumCategory = Category[category]
 
-        if (!description || !value || !month || !year || !day || !category) {
-            throw new BadRequestError("All fields must be filled")
+        if (ArgumentError.missingArgument(req.body)) {
+            return res.json("ERROR: All fields must be filled").status(502)
         }
 
         const alreadyExists = await Outgoing.findByMonthAndDescription(year, month, description)
-        const date = new Date(year, month, day);
         if (alreadyExists) {
-            throw new DuplicatedFieldError(
-                `Entry with description ${description} and 
-                 date ${date} already exists`
-                )
+            return res.json("ERROR: There is already a entry with same description and month").status(400)
         }
         
+        const date = new Date(year, month, day);
         const outgoing = await Outgoing.createOutgoing(description, value, date, enumCategory)
 
         return res.json(outgoing);
@@ -45,7 +42,7 @@ class OutgoingController {
         const outgoing = await Outgoing.findById(outgoing_id)
 
         if (!outgoing) {
-            throw new BadRequestError("Outgoing does not exists")
+            return res.json('Error: Id Didn\'t match any result')
         }
 
         return res.json(outgoing)
@@ -55,8 +52,8 @@ class OutgoingController {
         const { outgoing_id } = req.params;
         const { description, value } = req.body;
 
-        if(!description || !value) {
-            throw new BadRequestError("All fields must be filled")
+        if(ArgumentError.missingDescriptionAndValue(description, value)) {
+            return res.json("ERROR: Fields description and value must be filled").status(502)
         }
 
         const outgoing = await Outgoing.updateById(outgoing_id, description, value)
@@ -74,7 +71,7 @@ class OutgoingController {
         })
 
         if (!outgoing) {
-            throw new BadRequestError("Outgoing does not exists")
+            return res.json("ERROR: Outgoing not find").status(502)
         }
 
         return res.json(outgoing)
@@ -86,7 +83,7 @@ class OutgoingController {
         const outgoing = await Outgoing.findByDescription(description)
 
         if(!outgoing) {
-            throw new BadRequestError("Outgoing does not exists")
+            return res.json("ERROR: No matches with the given description")
         }
 
         return res.json(outgoing)
@@ -105,8 +102,8 @@ class OutgoingController {
     static async findByMonth(req: Request, res: Response) {
 
         const { year, month } = req.params
-        if (!year || !month) {
-            throw new BadRequestError("All fields must be filled")
+        if (ArgumentError.missingMonthYear(year, month)) {
+            return res.status(502).json("ERROR: Missing year or month")
         }
 
         const { maximumDate, minimumDate } = DateUseCase.monthReference(year, month)

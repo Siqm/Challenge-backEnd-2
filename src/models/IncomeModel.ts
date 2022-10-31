@@ -39,7 +39,7 @@ class Income {
     static async findByMonthExtent (minimumDate, maximumDate) {
 
         const incomes = await client.income.findMany({
-            where: {   
+            where: {
                 date: {
                     gte: minimumDate,
                     lt: maximumDate
@@ -145,4 +145,4 @@ class Income {
     }
 }
 
-export { Income, IncomeRequest }
+export { Income }

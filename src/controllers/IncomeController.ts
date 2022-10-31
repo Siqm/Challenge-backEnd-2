@@ -2,18 +2,13 @@ import { Income } from "../models/IncomeModel";
 import { Request, Response } from "express"
 import { client } from "../prisma/client";
 import { DateUseCase } from "../providers/DateUseCase";
-import { BadRequestError, DuplicatedFieldError } from "../helpers/api-errors";
+import { ArgumentError } from "../errors/ArgumentError";
 
 class IncomeController {
 
     static async findByMonth(req: Request, res: Response) {
 
         const { year, month } = req.params
-
-        if(!year || !month) {
-            throw new BadRequestError('Year or month invalid')
-        }
-
         const {minimumDate, maximumDate} = DateUseCase.monthReference(year, month)
 
         const incomes = await Income.findByMonthExtent(minimumDate, maximumDate)
@@ -26,7 +21,7 @@ class IncomeController {
         const income = await Income.findById(income_id)
 
         if (!income) {
-            throw new BadRequestError("Income does not exists")
+            return res.json("ERROR: Income not find").status(502)
         }
 
         return res.json(income)
@@ -36,17 +31,13 @@ class IncomeController {
 
         const { description, value, day, month, year } = req.body
 
-        if (!description || !value || !day || !month || !year) {
-            throw new BadRequestError('All fields must be filled')
+        if (ArgumentError.missingArgument(req.body)) {
+            return res.json("ERROR: All fields must be filled").status(502)
         }
 
         const alreadyExists = await Income.findByMonthAndDescription(year, month, description)
-
         if (alreadyExists) {
-            throw new DuplicatedFieldError(
-                `Entry with description ${description} and
-                 date ${new Date(year, month)} already exists`
-                )
+            return res.json("ERROR: There is already a entry with same description and month").status
         }
 
         const date = new Date(year, month, day)
@@ -69,8 +60,8 @@ class IncomeController {
         const { income_id } = req.params;
         const { description, value, month, year, day } = req.body;
 
-        if (!description || !value || !month || !year || !day) {
-            throw new BadRequestError("All fields must be filled")
+        if (ArgumentError.missingArgument(req.body)) {
+            return res.json("ERROR: All fields must be filled").status(502)
         }
 
         const date = new Date(year, month, day)
