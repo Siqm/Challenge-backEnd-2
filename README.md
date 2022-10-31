@@ -6,6 +6,8 @@ Para começar, é necessário fazer as instalações novamente e são elas:
     npm add express
     npm i prisma -D
     npm i @prisma/client
+    npm i dotenv
+    npm i supertest
 ```
 
 Criação de um arquivo .env para a conexão com a database, o arquivo deve ter
