@@ -2,6 +2,9 @@ const NodeEnvironment = require('jest-environment-node').TestEnvironment
 const { v4: uuid } = require('uuid')
 const { execSync } = require('child_process')
 const { resolve } = require('path')
+const { Client } = require('pg')
+const { throws } = require('assert')
+const { connect } = require('http2')
 
 const binPath = "./node_modules/.bin/"
 
@@ -26,6 +29,16 @@ class CustomEnvironment extends NodeEnvironment {
         // Migrations
         execSync(`cd ${binPath}`)
         execSync(`prisma migrate dev`)
+    }
+
+    async teardown() {
+        const client = new Client({
+            connectionString: this.connectionString
+        })
+
+        await client.connect()
+        await client.query(`DROP SCHEMA IF EXISTS "${this.schema}" CASCADE`)
+        await client.end()
     }
 }
 
