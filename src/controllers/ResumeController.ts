@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
+import { BadRequestError } from "../helpers/api-errors";
 import { Income } from "../models/IncomeModel";
-import { Outgoing } from "../models/OutgoingModel";
+import { Outgoing } from "../models/OutGoingModel";
 import { client } from "../prisma/client";
 import { DateUseCase } from "../providers/DateUseCase";
 
@@ -17,7 +18,7 @@ class ResumeController {
             (minimumDate, maximumDate))._sum.value.toFixed(2)
 
         if (!outgoingsSum && !incomesSum) {
-            return res.json("ERROR: No matches to the given year and month")
+            throw new BadRequestError("ERROR: No matches to the given year and month")
         }
 
         const incomesBalance = parseFloat(incomesSum)

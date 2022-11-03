@@ -2,16 +2,25 @@ import { Income } from "../models/IncomeModel";
 import { Request, Response } from "express"
 import { client } from "../prisma/client";
 import { DateUseCase } from "../providers/DateUseCase";
-import { ArgumentError } from "../errors/ArgumentError";
+import { BadRequestError } from "../helpers/api-errors";
 
 class IncomeController {
 
     static async findByMonth(req: Request, res: Response) {
 
         const { year, month } = req.params
+
+        if(!year || !month) {
+            throw new BadRequestError('Year or month invalid')
+        }
+
         const {minimumDate, maximumDate} = DateUseCase.monthReference(year, month)
 
         const incomes = await Income.findByMonthExtent(minimumDate, maximumDate)
+
+        if (!incomes) {
+            throw new BadRequestError("No matches with given date")
+        }
 
         return res.json(incomes)
     }
@@ -21,7 +30,7 @@ class IncomeController {
         const income = await Income.findById(income_id)
 
         if (!income) {
-            return res.json("ERROR: Income not find").status(502)
+            throw new BadRequestError('No matche with given id')
         }
 
         return res.json(income)
@@ -31,13 +40,13 @@ class IncomeController {
 
         const { description, value, day, month, year } = req.body
 
-        if (ArgumentError.missingArgument(req.body)) {
-            return res.json("ERROR: All fields must be filled").status(502)
+        if (!description || !value || !day || !month || !year) {
+            throw new BadRequestError("All fields must be provided")
         }
 
         const alreadyExists = await Income.findByMonthAndDescription(year, month, description)
         if (alreadyExists) {
-            return res.json("ERROR: There is already a entry with same description and month").status
+            throw new BadRequestError("Duplicated entry")
         }
 
         const date = new Date(year, month, day)
@@ -60,8 +69,8 @@ class IncomeController {
         const { income_id } = req.params;
         const { description, value, month, year, day } = req.body;
 
-        if (ArgumentError.missingArgument(req.body)) {
-            return res.json("ERROR: All fields must be filled").status(502)
+        if (!description || !value || !month || !year || !day) {
+            throw new BadRequestError('All fields must be provided')
         }
 
         const date = new Date(year, month, day)
@@ -75,6 +84,10 @@ class IncomeController {
         const { income_id } = req.params;
 
         const income = await Income.deleteById(income_id)
+
+        if (!income) {
+            throw new BadRequestError("No matches to the given id")
+        }
 
         return res.json(income)
     }
@@ -93,6 +106,10 @@ class IncomeController {
         const description = req.query.description 
 
         const income = await Income.findAndValidateDescription(description)
+
+        if (!income) {
+            throw new BadRequestError("No match to the given description")
+        }
 
         return res.json(income)
     }
