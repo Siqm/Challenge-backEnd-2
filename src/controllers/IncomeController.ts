@@ -45,6 +45,7 @@ class IncomeController {
         }
 
         const alreadyExists = await Income.findByMonthAndDescription(year, month, description)
+
         if (alreadyExists) {
             throw new BadRequestError("Duplicated entry")
         }
