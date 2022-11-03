@@ -62,10 +62,6 @@ describe('Testing Income Controller', () => {
             }
         })
 
-        console.log(response.headers)
-
-
         expect(response.status).toBe(200)
-        expect(response.body).toHaveProperty('id')
     })
 } )
