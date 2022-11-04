@@ -50,4 +50,58 @@ describe('Testing Income Controller', () => {
 
         expect(response.status).toBe(200)
     })
+
+    it ('Try to post income without parameter', async () => {
+
+        let response = await request(app).post('/incomes').send({
+            description: 'test-income-without-value',
+            day: 19,
+            month: 10,
+            year: 2022
+        })
+
+        expect(response.status).toBe(400)
+
+        response = await request(app).post('/incomes').send({
+            description: 'test-income-without-day',
+            value: 100,
+            month: 10,
+            year: 2022
+        })
+
+        expect(response.status).toBe(400)
+
+        response = await request(app).post('/incomes').send({
+            description: 'test-income-without-month',
+            value: 100,
+            day: 19,
+            year: 2022
+        })
+
+        expect(response.status).toBe(400)
+
+        response = await request(app).post('/incomes').send({
+            description: 'test-income-without-year',
+            value: 100,
+            day: 19,
+            month: 10,
+        })
+
+        expect(response.status).toBe(400)
+    })
+
+    it('Should return income filtered by id', async ()  => {
+
+        const income = await request(app).post('/incomes').send({
+            description: 'test-filter-id',
+            value: 100,
+            day: 19,
+            month: 10,
+            year: 2022
+        })
+
+        const id = income.body
+
+        const response = await request('/incomes/')
+    })
 } )

@@ -49,4 +49,43 @@ describe('Testing Outgoing Controller', () => {
         
         expect(response.status).toBe(200);
     })
+
+    it ('Try to post outgoing without parameter', async () => {
+
+        let response = await request(app).post('/outgoings').send({
+            description: 'test-outgoing-without-value',
+            day: 19,
+            month: 10,
+            year: 2022
+        })
+
+        expect(response.status).toBe(400)
+
+        response = await request(app).post('/outgoings').send({
+            description: 'test-outgoing-without-day',
+            value: 100,
+            month: 10,
+            year: 2022
+        })
+
+        expect(response.status).toBe(400)
+
+        response = await request(app).post('/outgoings').send({
+            description: 'test-outgoing-without-month',
+            value: 100,
+            day: 19,
+            year: 2022
+        })
+
+        expect(response.status).toBe(400)
+
+        response = await request(app).post('/outgoings').send({
+            description: 'test-outgoing-without-year',
+            value: 100,
+            day: 19,
+            month: 10,
+        })
+
+        expect(response.status).toBe(400)
+    })
 })
