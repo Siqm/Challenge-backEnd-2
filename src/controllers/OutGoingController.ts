@@ -15,7 +15,7 @@ class OutgoingController {
         // Casting string to enum
         const enumCategory = Category[category]
 
-        if (!description || !value || !month || !year || !day || !category) {
+        if (!description || !value || !month || !year || !day ) {
             throw new BadRequestError("All fields must be filled")
         }
 

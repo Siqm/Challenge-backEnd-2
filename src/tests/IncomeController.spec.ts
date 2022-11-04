@@ -19,7 +19,6 @@ describe('Testing Income Controller', () => {
             year: 2022
         })
 
-        console.log(response.status)
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("id")
     })
@@ -47,20 +46,7 @@ describe('Testing Income Controller', () => {
 
     it("Should return income created at given date", async () => {
         
-        await request(app).post('/incomes').send({
-            description: 'test-create-income',
-            value: 250,
-            day: 19,
-            month: 10,
-            year: 2022
-        })
-
-        const response = await request(app).get('/incomes/2022/10').send({
-            params: {
-                year: 2022,
-                month: 10
-            }
-        })
+        const response = await request(app).get('/incomes/2022/10')
 
         expect(response.status).toBe(200)
     })
