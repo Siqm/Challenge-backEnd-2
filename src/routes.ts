@@ -3,7 +3,6 @@ import { IncomeController } from "./controllers/IncomeController";
 import { OutgoingController } from "./controllers/OutGoingController";
 import { ResumeController } from "./controllers/ResumeController";
 import { TesteController } from "./controllers/TesteController";
-import { BadRequestError, DuplicatedFieldError } from "./helpers/api-errors";
 
 const router = Router()
 
@@ -27,9 +26,5 @@ router.get('/resume/:year/:month', ResumeController.monthResume)
 router.get('/teste', TesteController.getByDate)
 router.get('/teste1', TesteController.testeData)
 router.post('/testeenum', TesteController.testeEnum)
-router.get('/', async () => {
-    throw new BadRequestError("teste");
-    
-})
 
 export { router };

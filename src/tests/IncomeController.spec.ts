@@ -111,4 +111,13 @@ describe('Testing Income Controller', () => {
 
         expect(income.status).toBe(400)
     })
+
+    it ('Should find an created income by description', async () => {
+
+        const pastCreatedIncome = 'test-filter-id'
+
+        const income = await request(app).get(`/incomes?description=${pastCreatedIncome}`)
+
+        expect(income.body[0]).toHaveProperty('id')
+    })
 } )

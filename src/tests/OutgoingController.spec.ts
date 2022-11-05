@@ -110,4 +110,13 @@ describe('Testing Outgoing Controller', () => {
 
         expect(outgoing.status).toBe(400)
     })
+
+    it ('Should find an created outgoing by description', async () => {
+
+        const pastCreatedOutgoing = 'test-filter-id'
+
+        const outgoing = await request(app).get(`/outgoings?description=${pastCreatedOutgoing}`)
+
+        expect(outgoing.body[0]).toHaveProperty('id')
+    })
 })
