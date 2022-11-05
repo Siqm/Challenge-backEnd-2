@@ -104,5 +104,10 @@ describe('Testing Outgoing Controller', () => {
         expect(response.body).toHaveProperty('description', outgoing.body.description)
     })
 
-    
+    it ('Should not return outgoing by invalid id', async () => {
+
+        const outgoing = await request(app).get('/outgoings/123')
+
+        expect(outgoing.status).toBe(400)
+    })
 })

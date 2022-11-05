@@ -100,8 +100,15 @@ describe('Testing Income Controller', () => {
             year: 2022
         })
 
-        const id = income.body
+        const response = await request(app).get(`/incomes/${income.body.id}`)
 
-        const response = await request('/incomes/')
+        expect(response.body).toHaveProperty('description', income.body.description)
+    })
+
+    it ('Should not return income by invalid id', async () => {
+
+        const income = await request(app).get('/incomes/123')
+
+        expect(income.status).toBe(400)
     })
 } )
