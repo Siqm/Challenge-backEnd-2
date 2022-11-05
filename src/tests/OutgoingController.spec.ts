@@ -44,7 +44,7 @@ describe('Testing Outgoing Controller', () => {
         expect(response.status).toBe(400);
     })
 
-    it('Should return income created at given date', async () => {
+    it('Should return outgoing created at given date', async () => {
         const response = await request(app).get('/outgoings/2022/10')
         
         expect(response.status).toBe(200);
@@ -88,4 +88,21 @@ describe('Testing Outgoing Controller', () => {
 
         expect(response.status).toBe(400)
     })
+
+    it('Should return outgoing filtered by id', async ()  => {
+
+        const outgoing = await request(app).post('/outgoings').send({
+            description: 'test-filter-id',
+            value: 100,
+            day: 19,
+            month: 10,
+            year: 2022
+        })
+
+        const response = await request(app).get(`/outgoings/${outgoing.body.id}`)
+
+        expect(response.body).toHaveProperty('description', outgoing.body.description)
+    })
+
+    
 })
