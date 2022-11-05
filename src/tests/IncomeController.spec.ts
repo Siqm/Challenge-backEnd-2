@@ -120,4 +120,23 @@ describe('Testing Income Controller', () => {
 
         expect(income.body[0]).toHaveProperty('id')
     })
+
+    it ('Should atualize an created income', async () => {
+
+        const pastCreatedIncome = 'test-filter-id'
+
+        const income = await request(app).get(`/incomes?description=${pastCreatedIncome}`)
+        const incomeId = income.body[0].id
+
+        let atualizedIncome = await request(app).put(`/incomes/${incomeId}`).send({
+            description: 'atualized-income',
+            value: 300
+        })
+
+        console.log(atualizedIncome.body)
+
+        expect(atualizedIncome.status).toBe(400)
+        
+        atualizedIncome = await request(app).put(`/incomes/${incomeId}`)
+    })
 } )
