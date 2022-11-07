@@ -133,6 +133,18 @@ describe('Testing Outgoing Controller', () => {
         })
 
         expect(atualizedOutgoing.status).toBe(200)
+    })
 
+    it("Should delete outgoing filtered by id", async () => {
+
+
+        const description = 'atualized-outgoing'
+        const outgoing = await request(app).get(`/outgoings?description=${description}`)
+        expect (outgoing.body[0]).toHaveProperty('id');
+
+        const id = outgoing.body[0].id
+        const deletedOutgoing = await request(app).delete(`/outgoings/${id}`)
+
+        expect(deletedOutgoing.status).toBe(200)
     })
 })

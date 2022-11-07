@@ -145,4 +145,17 @@ describe('Testing Income Controller', () => {
 
         expect(atualizedIncome.status).toBe(200)
     })
+
+    it("Should delete income filtered by id", async () => {
+
+
+        const description = 'atualized-income'
+        const income = await request(app).get(`/incomes?description=${description}`)
+        expect (income.body[0]).toHaveProperty('id');
+
+        const id = income.body[0].id
+        const deletedIncome = await request(app).delete(`/incomes/${id}`)
+
+        expect(deletedIncome.status).toBe(200)
+    })
 } )
