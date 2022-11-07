@@ -1,9 +1,11 @@
 import { Router } from "express";
+import { AuthenticateUserController } from "./controllers/AuthenticateUserController";
 import { IncomeController } from "./controllers/IncomeController";
 import { OutgoingController } from "./controllers/OutGoingController";
 import { ResumeController } from "./controllers/ResumeController";
 import { TesteController } from "./controllers/TesteController";
 import { UserController } from "./controllers/UserController";
+import { ensureAuthentication } from "./middlewares/ensureAuthentication";
 
 const router = Router()
 
@@ -25,9 +27,13 @@ router.get('/outgoings/:year/:month', OutgoingController.findByMonth)
 router.get('/resume/:year/:month', ResumeController.monthResume)
 
 router.post('/users', UserController.create)
+router.post('/login', AuthenticateUserController.refreshToken)
 
-router.get('/teste', TesteController.getByDate)
-router.get('/teste1', TesteController.testeData)
-router.post('/testeenum', TesteController.testeEnum)
+router.get('/teste', ensureAuthentication, (request, response) => {
+    return response.json([
+        {id: 1, name: 'Teste'},
+        {id: 2, name: 'Lindo'}
+    ])
+})
 
 export { router };

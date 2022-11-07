@@ -11,11 +11,7 @@ interface IUserRequest {
 class User {
     static async execute ({ name, email, password}: IUserRequest) {
 
-        const userAlreadyExists = await client.user.findFirst({
-            where: {
-                email
-            }
-        })
+        const userAlreadyExists = await this.findByEmail(email)
 
         if (userAlreadyExists) {
             throw new AlreadyExistsError('User already exists')
@@ -41,10 +37,6 @@ class User {
                 email
             }
         })
-
-        if (!user) {
-            throw new BadRequestError('')
-        }
 
         return user;
     }
