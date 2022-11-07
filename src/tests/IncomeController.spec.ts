@@ -133,10 +133,16 @@ describe('Testing Income Controller', () => {
             value: 300
         })
 
-        console.log(atualizedIncome.body)
-
         expect(atualizedIncome.status).toBe(400)
         
-        atualizedIncome = await request(app).put(`/incomes/${incomeId}`)
+        atualizedIncome = await request(app).put(`/incomes/${incomeId}`).send({
+            description: 'atualized-income',
+            value: 300,
+            month: 10,
+            year: 2022,
+            day: 20
+        })
+
+        expect(atualizedIncome.status).toBe(200)
     })
 } )

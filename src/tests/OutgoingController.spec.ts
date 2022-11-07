@@ -119,4 +119,20 @@ describe('Testing Outgoing Controller', () => {
 
         expect(outgoing.body[0]).toHaveProperty('id')
     })
+
+    it ('Should atualize an created outgoing', async () => {
+
+        const pastCreatedOutgoing = 'test-filter-id'
+
+        const outgoing = await request(app).get(`/outgoings?description=${pastCreatedOutgoing}`)
+        const outgoingId = outgoing.body[0].id
+
+        const atualizedOutgoing = await request(app).put(`/outgoings/${outgoingId}`).send({
+            description: 'atualized-outgoing',
+            value: 300
+        })
+
+        expect(atualizedOutgoing.status).toBe(200)
+
+    })
 })
