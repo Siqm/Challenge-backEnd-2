@@ -20,9 +20,9 @@ export class AuthenticateUser {
             throw new BadRequestError('Email or password incorrect!')
         }
         
-        const token = sign({}, process.env.PRIVATE_KEY, {
+        const token = sign({ id: userAlreadyExists.id }, process.env.PRIVATE_KEY, {
             subject: userAlreadyExists.id,
-            expiresIn: "20s"
+            expiresIn: "20m"
         })
 
         return { token };
