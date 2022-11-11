@@ -5,6 +5,22 @@
 </body>
 
 <script>
-    fetch()
+
+    async function getContent() {
+        try {
+            const response = await fetch('http://localhost:3000/teste')
+            console.log(response)
+
+            const data = await response.json()
+
+            console.log(data)
+        } catch (error) {
+            console.log('error')
+        }
+        
+    }
+    
+    
+    console.log(getContent())
 
 </script>
