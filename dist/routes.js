@@ -26,7 +26,7 @@ router.get('/outgoings/:year/:month', ensureAuthentication_1.ensureAuthenticatio
 router.get('/resume/:year/:month', ensureAuthentication_1.ensureAuthentication, ResumeController_1.ResumeController.monthResume);
 router.post('/users', UserController_1.UserController.create);
 router.post('/login', AuthenticateUserController_1.AuthenticateUserController.refreshToken);
-router.get('/teste', ensureAuthentication_1.ensureAuthentication, (request, response) => {
+router.get('/teste', (request, response) => {
     return response.json([
         { id: 1, name: 'Teste' },
         { id: 2, name: 'Lindo' }
