@@ -29,7 +29,7 @@ router.get('/resume/:year/:month', ensureAuthentication, ResumeController.monthR
 router.post('/users', UserController.create)
 router.post('/login', AuthenticateUserController.refreshToken)
 
-router.get('/teste', ensureAuthentication, (request, response) => {
+router.get('/teste', (request, response) => {
     return response.json([
         {id: 1, name: 'Teste'},
         {id: 2, name: 'Lindo'}
