@@ -1,0 +1,19 @@
+<h1>        tag de titulo
+<p>         tag de paragrafo
+<strong>    tag de negrito
+<em>        tag de italico
+<!DOCTYPE html>
+<html>      tag de conteudo, html que vai ser renderizado no navegador, e.g. lang
+<meta>      tag para passar informações, e.g. chatset
+<title>     tag titulo da pagina ( nome na guia )
+<head>      Tag onde colocamos os conteudos que queremos passar para o navegador
+<body>      tag de conteudo do site
+<link>      tag para relacionar o documento atual com um serviço externo
+<ul>        tag de lista desordenada
+<ol>        tag de lista ordenada
+<li>        tag para user dentro das listas, para listar cada elemento
+<div>       tag de divisão
+<img>       tag para inserir imagem
+
+CSS
+style -> 
