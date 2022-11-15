@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang = "pt-br">
+
+    <head>
+        <meta charset = "UTF-8">
+        <title>Siq Financial</title>
+        <!-- <link rel="stylesheet" href = "cssReset.css"> -->
+        <link rel="stylesheet" href="style.css">
+        <link href='https://css.gg/css' rel='stylesheet'>
+        <link href='https://css.gg/css' rel='stylesheet'>
+    </head>
+
+    <body>
+        
+        <div id="conteudo">
+
+            <h1>menu lateral em css</h1>
+
+        </div>
+
+        <div id = "menu">
+            <ul>
+                <li>
+                    <a href="https://www.youtube.com/"> <gg-icon class="gg-align-left.css">teste</gg-icon> </a>
+                </li>
+                <li><a href="https://www.youtube.com/">teste2</a></li>
+                <li><a href="https://www.youtube.com/">teste3</a></li>
+
+            </ul>
+
+        </div>
+    </body>
+
+</html>
+
+<script>
+
+    async function getContent() {
+        try {
+            const response = await fetch('http://localhost:3000/teste')
+            console.log(response)
+
+            const data = await response.json()
+
+            console.log(data)
+        } catch (error) {
+            console.log('error')
+        }
+        
+    }
+    
+    
+    console.log(getContent())
+
+</script>
+

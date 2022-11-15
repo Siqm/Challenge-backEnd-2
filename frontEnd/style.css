@@ -1,0 +1,13 @@
+h1 {
+    text-align: center;
+}
+
+body {
+    background: #ffd448;
+    font: 12px Verdana, sans-serif;
+}
+
+ul {
+    list-style-image: url("http://squids.com.br/icons/folder.png");
+}
+

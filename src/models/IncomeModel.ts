@@ -33,6 +33,8 @@ class Income {
             }
         })
 
+        console.log(income)
+
         return income;
     }
 
