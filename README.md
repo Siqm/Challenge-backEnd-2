@@ -3,10 +3,14 @@
 Para começar, é necessário fazer as instalações novamente e são elas:
 ```
     npm add typescript @types/express ts-node-dev -D
-    npm i @types/jest jest ts-jest @types/bcryptjs prisma -D
-    npm i dotenv express supertest bcryptjs pg express-async-errors jsonwebtoken @prisma/client
-    npm i --save-dev babel-jest @babel/core @babel/preset-env
-    npm i --save @types/jsonwebtoken
+    npm add express
+    npm i prisma -D
+    npm i @prisma/client
+    npm i @types/jest jest ts-jest -D
+    npm i dotenv
+    npm i supertest
+    npm install --save-dev babel-jest @babel/core @babel/preset-env
+    npm i pg express-async-errors
 ```
 
 Criação de um arquivo .env para a conexão com a database, o arquivo deve ter

@@ -133,29 +133,10 @@ describe('Testing Income Controller', () => {
             value: 300
         })
 
+        console.log(atualizedIncome.body)
+
         expect(atualizedIncome.status).toBe(400)
         
-        atualizedIncome = await request(app).put(`/incomes/${incomeId}`).send({
-            description: 'atualized-income',
-            value: 300,
-            month: 10,
-            year: 2022,
-            day: 20
-        })
-
-        expect(atualizedIncome.status).toBe(200)
-    })
-
-    it("Should delete income filtered by id", async () => {
-
-
-        const description = 'atualized-income'
-        const income = await request(app).get(`/incomes?description=${description}`)
-        expect (income.body[0]).toHaveProperty('id');
-
-        const id = income.body[0].id
-        const deletedIncome = await request(app).delete(`/incomes/${id}`)
-
-        expect(deletedIncome.status).toBe(200)
+        atualizedIncome = await request(app).put(`/incomes/${incomeId}`)
     })
 } )

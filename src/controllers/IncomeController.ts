@@ -38,7 +38,6 @@ class IncomeController {
 
     static async postIncome (req: Request, res: Response) {
 
-        console.log('começo')
         const { description, value, day, month, year } = req.body
 
         if (!description || !value || !day || !month || !year) {
@@ -51,16 +50,12 @@ class IncomeController {
             throw new BadRequestError("Duplicated entry")
         }
 
-        console.log('meio')
-
         const date = new Date(year, month, day)
-        console.log('fim')
         const income = await Income.createIncome({
             description,
             value,
             date
         })
-        console.log(income)
 
         return res.json(income)
     }
